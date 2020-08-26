@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}{{question.title}}{% endblock %}
 {% load jalali_tags %}
 {% block js_code %}
 {% load mptt_tags %}
@@ -137,20 +138,14 @@
                 <div class="score_stuff" id="q_score">{{ question.score }}</div>
                 <button class="fa fa-minus btn btn-danger score_stuff" id="q_vote_down"></button>
             </div>
-            <div class="row main_row">
-                <div class="col col-1 q_score">
-                    {{ question.score }}
-                </div>
-                <div class="rtl_text" class="col col-7">
-                    {{ question.text | safe}}
+            <div class="col col-11 main_text rtl_text ">
+                {{ question.text | safe }}
+                <div>
+                    {% for tag in question.tags.all %}
+                    <a class="badge badge-secondary badge-pill tag_badge" href="{% url 'action:question-list' %}?tag={{tag}}">{{ tag }}</a>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
-        <br>
-        <div class="float-left">
-                {% for tag in question.tags.all %}
-                <a class="badge badge-pill badge-info" href="#" style="font-size: 15px; padding: 10px;">{{ tag }}</a>
-                {% endfor %}
         </div>
     </div>
     <div class="card-body bg-light">
@@ -181,7 +176,6 @@
             </div>
         </div>
     </div>
-    <br><br>
     <div class="card-body">
         {% if question.reply_set.all %}
             <ul>
@@ -254,7 +248,9 @@
                     id="ans_vote_down_{{answer.id}}"></button>
             </div>
             <div class="col col-11  main_text">
-                <p class="rtl_text">{{ answer.text }}</p>
+                <p class="rtl_text">
+                    {{ answer.text }}
+                </p>
             </div>
         </div>
     </div>
@@ -275,7 +271,7 @@
                 {{answer.last_updated_on|to_jalali:'%d %B %y ساعت %H:%M'}}
                 </p>
             </div>
-            {% comment %} <div class="col col-12 col-lg-3">
+            <div class="col col-12 col-lg-3">
                 {% if answer.user == request.user %}
                     <a class="btn btn-info"
                         href="{% url 'action:answer-edit' pk=answer.id %}">ویرایش</a>
@@ -283,7 +279,7 @@
                     <a class="btn btn-danger"
                         href="{% url 'action:answer-delete' pk=answer.id %}">حذف</a>
                 {% endif %}
-            </div> {% endcomment %}
+            </div>
         </div>
     </div>
 </div>
